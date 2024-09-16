@@ -1,0 +1,1109 @@
+Import static com.kms.katalon.core.checkpoint.CheckpointFactory.findCheckpoint
+import static com.kms.katalon.core.testcase.TestCaseFactory.findTestCase
+import static com.kms.katalon.core.testdata.TestDataFactory.findTestData
+import static com.kms.katalon.core.testobject.ObjectRepository.findTestObject
+import com.kms.katalon.core.checkpoint.Checkpoint as Checkpoint
+import com.kms.katalon.core.cucumber.keyword.CucumberBuiltinKeywords as CucumberKW
+import com.kms.katalon.core.mobile.keyword.MobileBuiltInKeywords as Mobile
+import com.kms.katalon.core.model.FailureHandling as FailureHandling
+import com.kms.katalon.core.testcase.TestCase as TestCase
+import com.kms.katalon.core.testdata.TestData as TestData
+import com.kms.katalon.core.testobject.TestObject as TestObject
+import com.kms.katalon.core.testobject.ConditionType as ConditionType
+import com.kms.katalon.core.webservice.keyword.WSBuiltInKeywords as WS
+import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
+import internal.GlobalVariable as GlobalVariable
+import com.kms.katalon.core.webui.driver.DriverFactory as DriverFactory
+import org.openqa.selenium.WebDriver as WebDriver
+import org.openqa.selenium.WebElement as WebElement
+import org.openqa.selenium.Keys as Keys
+import org.openqa.selenium.By as By
+import io.appium.java_client.AppiumDriver as AppiumDriver
+import com.kms.katalon.core.mobile.keyword.internal.MobileDriverFactory as MobileDriverFactory
+import com.kms.katalon.core.annotation.Keyword as Keyword
+import com.kms.katalon.core.mobile.helper.MobileElementCommonHelper as MobileElementCommonHelper
+import com.kms.katalon.core.util.KeywordUtil as KeywordUtil
+import java.io.FileInputStream
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.io.IOException
+import org.apache.poi.ss.usermodel.Cell
+import org.apache.poi.ss.usermodel.Row
+import org.apache.poi.xssf.usermodel.XSSFCell
+import org.apache.poi.xssf.usermodel.XSSFCellStyle
+import org.apache.poi.xssf.usermodel.XSSFRow
+import org.apache.poi.xssf.usermodel.XSSFSheet
+import org.apache.poi.xssf.usermodel.XSSFWorkbook
+import org.apache.commons.lang3.time.StopWatch
+import java.lang.Integer as Integer
+import java.util.concurrent.TimeUnit
+
+import io.appium.java_client.android.nativekey.AndroidKey
+import io.appium.java_client.android.nativekey.KeyEvent
+import io.appium.java_client.android.AndroidDriver
+
+import keyPS.fundSyariah
+
+public class ProposalMEPS {
+
+@Keyword
+def PROPOSAL(String strNo, int excelRow){
+
+TestData dataProposalPS				= findTestData('dataPS/syariah/PROPOSAL')
+
+String strPrioritas					= dataProposalPS.getValue('PRIORITAS ASURANSI', excelRow)
+String strPengalamanInvestasi		= dataProposalPS.getValue('PENGALAMAN INVESTASI', excelRow)
+String strInstrumentInvestasi		= dataProposalPS.getValue('PENGETAHUAN INSTRUMENT INVESTASI', excelRow)
+String strKeseluruhanPenghasilan	= dataProposalPS.getValue('KESELURUHAN PENGHASILAN', excelRow)
+String strSesuaiPengalamanInvestasi	= dataProposalPS.getValue('SESUAI PENGALAMAN INVESTASI', excelRow)
+String strKenyamananResiko			= dataProposalPS.getValue('TINGKAT KENYAMANAN RESIKO', excelRow)
+
+String strRisikoPolis				= dataProposalPS.getValue('PROFIL RISIKO NASABAH', excelRow)
+String strNamaPP					= dataProposalPS.getValue('NAMA PEMEGANG POLIS', excelRow)
+String strTglLahirPP				= dataProposalPS.getValue('TANGGAL LAHIR PEMEGANG POLIS', excelRow)
+String[]splitTglLahirPP				= strTglLahirPP.split('-')
+String TglLahirPPBaru				= splitTglLahirPP[0].trim()
+String BlnLahirPPBaru				= splitTglLahirPP[1].trim()
+String ThnLahirPPBaru				= splitTglLahirPP[2].trim()
+String strJKPP						= dataProposalPS.getValue('JENIS KELAMIN PEMEGANG POLIS', excelRow) //
+String strJobPP						= dataProposalPS.getValue('JENIS PEKERJAAN PEMEGANG POLIS', excelRow)
+String strPilihanTTG				= dataProposalPS.getValue('PILIHAN PESERTA', excelRow) // peserta == TTG
+String strNamaTTG					= dataProposalPS.getValue('NAMA PESERTA', excelRow)
+String strTglLahirTTG				= dataProposalPS.getValue('TANGGAL LAHIR PESERTA', excelRow)
+String[]splitTglLahirTTG			= strTglLahirTTG.split('-')
+
+String strJKTTG						= dataProposalPS.getValue('JENIS KELAMIN PESERTA', excelRow)
+String strJobTTG					= dataProposalPS.getValue('JENIS PEKERJAAN PESERTA', excelRow)
+String strHubunganTTG				= dataProposalPS.getValue('HUBUNGAN PESERTA', excelRow)
+
+String strPlan						= dataProposalPS.getValue('PLAN', excelRow)
+
+String strFamilyPlanBooster			= dataProposalPS.getValue('FAMILY PLAN BOOSTER', excelRow)
+String strRider						= dataProposalPS.getValue('RIDER', excelRow)
+String strMandiriCriticalCare		= dataProposalPS.getValue('MANDIRI CRITICAL CARE', excelRow)
+String strAdditionalRider1			= dataProposalPS.getValue('ADDITIONAL RIDER 1', excelRow)
+String strAdditionalRider2			= dataProposalPS.getValue('ADDITIONAL RIDER 2', excelRow)
+String strAdditionalRider3			= dataProposalPS.getValue('ADDITIONAL RIDER 3', excelRow)
+String strMandiriMedicalCare		= dataProposalPS.getValue('MANDIRI MEDICAL CARE', excelRow)
+String strPerlindunganDanaPendidikan= dataProposalPS.getValue('PERLINDUNGAN DANA PENDIDIKAN', excelRow)
+String[]splitPerlindunganDanaPendidikan		= strPerlindunganDanaPendidikan.split('-')
+
+String strPerlindunganKontribusiPlus= dataProposalPS.getValue('PERLINDUNGAN PEMBAYARAN KONTRIBUSI PLUS', excelRow)
+String strPerlindunganPembayaranPP	= dataProposalPS.getValue('PERLINDUNGAN PEMBAYARAN BAGI PP', excelRow)
+
+String strMataUangProposal			= dataProposalPS.getValue('MATA UANG', excelRow)
+String strCaraBayar					= dataProposalPS.getValue('CARA BAYAR', excelRow)
+String strPertanggungan				= dataProposalPS.getValue('PERTANGGUNGAN', excelRow)
+String strRBP						= dataProposalPS.getValue('RBP MIX', excelRow)
+String strSantunan					= dataProposalPS.getValue('SANTUNAN ASURANSI DASAR', excelRow)
+String strKontribusi				= dataProposalPS.getValue('TOTAL KONTRIBUSI', excelRow)
+String strPenghasilan				= dataProposalPS.getValue('PENGHASILAN PER BULAN', excelRow)
+String strSantunanAsuransiTambahanMCC = dataProposalPS.getValue('SANTUNAN ASURANSI TAMBAHAN MCC', excelRow)
+
+String strEquity					= dataProposalPS.getValue('MANDIRI AMANAH EQUITY SYARIAH RUPIAH', excelRow)
+String strAlokasiEquity				= dataProposalPS.getValue('ALOKASI AMANAH', excelRow)
+String strAttractive				= dataProposalPS.getValue('MANDIRI ATTRACTIVE EQUITY MONEY SYARIAH RUPIAH', excelRow)
+String strAlokasiAttractive			= dataProposalPS.getValue('ALOKASI ATTRACTIVE', excelRow)
+String strActive					= dataProposalPS.getValue('MANDIRI ACTIVE BALANCED MONEY SYARIAH RUPIAH', excelRow)
+String strAlokasiActive				= dataProposalPS.getValue('ALOKASI ACTIVE', excelRow)
+String strPendapatan				= dataProposalPS.getValue('MANDIRI AMANAH PENDAPATAN TETAP SYARIAH RUPIAH', excelRow)
+String strAlokasiPendapatan			= dataProposalPS.getValue('ALOKASI PENDAPATAN', excelRow)
+String strPasarUang					= dataProposalPS.getValue('MANDIRI AMANAH PASAR UANG SYARIAH RUPIAH', excelRow)
+String strAlokasiPasarUang			= dataProposalPS.getValue('ALOKASI PASAR', excelRow)
+//
+String strLumpsum					= dataProposalPS.getValue('LUMPSUM', excelRow)
+String strWithdrawal				= dataProposalPS.getValue('WITHDRAWAL', excelRow)
+
+
+//----------------------------------HALAMAN PROPOSAL-----------------------------------------
+
+//kodingan untuk masuk ke solusi prioritas asuransi -> ada 5 pilihan
+
+// kodingan untuk mengecek judul prioritas.
+TestObject descPriority = new TestObject('newObjectDescPilihPrioritas')
+descPriority.addProperty('text', ConditionType.EQUALS, strPrioritas)
+descPriority.addProperty('resource-id', ConditionType.EQUALS, 'com.axamandiri.perfectsolutionsyariah:id/tvTitle')
+Mobile.delay(1)
+
+// kodingan looping untuk cek satu per satu prioritas, karena posisinya berubah rubah, tapi id posisinya sama aja
+for (int position : (1..5)) {
+if(position == 1){
+Mobile.tap(findTestObject('Object Repository/Syariah/btnFirstPriority'),0)
+Mobile.delay(1)
+
+}else if(position == 2){
+Mobile.tap(findTestObject('Object Repository/Syariah/btnSecondPriority'),0)
+Mobile.delay(1)
+
+}else if(position == 3){
+Mobile.tap(findTestObject('Object Repository/Syariah/btnThirdPriority_1'),0)
+Mobile.delay(1)
+
+}else if(position == 4){
+Mobile.tap(findTestObject('Object Repository/Syariah/btnFourthPriority'),0)
+Mobile.delay(1)
+
+}else if(position == 5){
+Mobile.tap(findTestObject('Object Repository/Syariah/btnFifthPriority'),0)
+Mobile.delay(1)
+
+}
+
+//cek label priority
+// setelah klik posisi priority, akan masuk ke kodingan ini buat cek labelnya
+Boolean cekPriority = Mobile.verifyElementExist(descPriority, 1, FailureHandling.OPTIONAL)
+Thread.sleep(1000)
+if (cekPriority == true){
+keyPS.KeywordPS.SwipeDownIfObjectNotOnScreen('Object Repository/ProteksiJiwaKPRN/btnLanjutkanPopUpProteksi')
+Mobile.tap(findTestObject('Object Repository/ProteksiJiwaKPRN/btnLanjutkanPopUpProteksi'), 0)
+break;
+}
+else{
+Mobile.tap(findTestObject('Object Repository/Syariah/btnClosePriority'), 0)
+}
+}
+
+Thread.sleep(1200)
+
+// pilih card
+TestObject descSolusi = new TestObject('newObjectDescSolusi')
+descSolusi.addProperty('xpath', ConditionType.EQUALS, "//*[@resource-id = 'com.axamandiri.perfectsolutionsyariah:id/tvHeader' and @text = '" + strPlan + "']/ancestor::android.widget.LinearLayout/../*[@class = 'android.widget.ScrollView']//*[@resource-id = 'com.axamandiri.perfectsolutionsyariah:id/tvDescProduct']")
+Boolean cekSolusi = Mobile.verifyElementExist(descSolusi, 1, FailureHandling.OPTIONAL)
+
+if(cekSolusi == true){
+Mobile.tap(descSolusi, 1)
+Mobile.delay(0.5)
+Mobile.tap(findTestObject('Object Repository/ProteksiJiwaKPRN/btnLanjutkanMEPSProtection'),0) // tap lanjutkan buat ke kprn
+Mobile.delay(0.5)
+Mobile.tap(findTestObject('Object Repository/Syariah/proposal/cbAgreeCardMEPS'),0) // tap lanjutkan buat ke kprn
+Mobile.delay(0.5)
+Mobile.tap(findTestObject('Object Repository/ProteksiJiwaKPRN/btnOkLanjutkan'), 0)
+Mobile.delay(1)
+}
+else {
+while (cekSolusi == false) {
+Mobile.swipe(1280, 700, 700, 700)
+Thread.sleep(1000)
+cekSolusi = Mobile.verifyElementExist(descSolusi, 1, FailureHandling.OPTIONAL)
+if (cekSolusi == true) {
+Mobile.tap(descSolusi, 1)
+break;
+}
+}
+}
+
+// lagi coba pisahin kprn ke kodingan sendiri.
+keyPS.KPRN_Syariah.kprn_syariah(strPengalamanInvestasi,strInstrumentInvestasi,strKeseluruhanPenghasilan,strSesuaiPengalamanInvestasi,strKenyamananResiko)
+
+//----------------------------------HALAMAN PROPOSAL DATA NASABAH-----------------------------------------
+
+if (strNamaPP != ''){
+Mobile.tap(findTestObject('Object Repository/objProposal_Shariah/txtNamaPP'), 0)
+Mobile.setText(findTestObject('Object Repository/objProposal_Shariah/txtNamaPP'), strNamaPP, 0)
+Mobile.hideKeyboard()
+}
+
+//tanggal lahir pemegang polis
+if (strTglLahirPP != ''){
+
+Mobile.tap(findTestObject('Object Repository/objProposal_Shariah/txtTanggalLahirPP'), 0)
+
+//isi tahun lahir
+Mobile.tap(findTestObject('Object Repository/Syariah/proposal/setTextTahunPP_baru'), 0)
+Mobile.setText(findTestObject('Object Repository/Syariah/proposal/setTextTahunPP_baru'), ThnLahirPPBaru, 0)
+
+//isi bulan lahir
+Mobile.tap(findTestObject('Object Repository/Syariah/proposal/setTextBulanPP_baru'), 0)
+Mobile.setText(findTestObject('Object Repository/Syariah/proposal/setTextBulanPP_baru'), BlnLahirPPBaru, 0)
+
+//isi tanggal lahir
+Mobile.tap(findTestObject('Object Repository/Syariah/proposal/setTextTanggalPP_baru'), 0)
+Mobile.setText(findTestObject('Object Repository/Syariah/proposal/setTextTanggalPP_baru'), TglLahirPPBaru, 0)
+
+//ok set tanggal lahir PP
+Mobile.tap(findTestObject('Object Repository/objProposal_Shariah/btnOKTanggalLahirPP'), 0)
+Mobile.delay(0.5)
+
+Mobile.hideKeyboard()
+Mobile.delay(1)
+}
+
+// validasi usia pp
+Boolean cekUsiaMinPP = Mobile.verifyElementVisible(findTestObject('Object Repository/Syariah/proposal/validasiUmurPP'), 1, FailureHandling.OPTIONAL)
+println(cekUsiaMinPP)
+
+if (GlobalVariable.strGlbMenu == 'PROPOSAL') {
+if (cekUsiaMinPP == true) {
+def message_usiaMinPP = Mobile.getText(findTestObject('Object Repository/Syariah/proposal/validasiUmurPP'),0)
+GlobalVariable.strGlbStatus = 'FAILED'
+GlobalVariable.strGlbKeterangan = message_usiaMinPP
+KeywordPS.callStatus(strNo, 'PROPOSAL', 53)
+//					Mobile.tapAtPosition(825, 80, FailureHandling.OPTIONAL)
+//					Mobile.delay(1)
+} else {
+GlobalVariable.strGlbStatus = 'PASSED'
+}
+}
+
+//isi Jenis Kelamin
+if(strJKPP != '') {
+if(strJKPP == 'Pria') {
+Mobile.tap(findTestObject('Object Repository/ProteksiJiwaKPRN/rbPriaPP'), 0)
+}else {
+Mobile.tap(findTestObject('Object Repository/ProteksiJiwaKPRN/rbWanitaPP'), 0)
+}
+}
+
+//isi Detail Pekerjaan
+if(strJobPP !='') {
+Mobile.tap(findTestObject('Object Repository/ProteksiJiwaKPRN/ddAreaDetailPekerjaanPP'), 0, FailureHandling.OPTIONAL)
+Mobile.setText(findTestObject('Object Repository/objProposal_Shariah/setTextDetailPekerjaanPP'), strJobPP, 0, FailureHandling.OPTIONAL)
+
+TestObject descDetailPekerjaanPP = new TestObject('newObjectDetailPekerjaanPP')
+descDetailPekerjaanPP.addProperty('text', ConditionType.CONTAINS, strJobPP )
+descDetailPekerjaanPP.addProperty('resource-id', ConditionType.EQUALS, 'android:id/text1')
+Boolean cekDetailPekerjaanPP = Mobile.verifyElementExist(descDetailPekerjaanPP, 1, FailureHandling.OPTIONAL)
+if(cekDetailPekerjaanPP == true){
+Mobile.tap(descDetailPekerjaanPP, 0)
+}
+}
+
+// family plan booster
+Boolean cekElementFamilyPlanBooster = Mobile.verifyElementExist(findTestObject('Object Repository/Syariah/cbFamilyPlanBooster'), 1, FailureHandling.OPTIONAL)
+if (cekElementFamilyPlanBooster == true) {
+if (strFamilyPlanBooster == 'Ya') {
+TestObject cekCbNoWa = findTestObject('Object Repository/Syariah/cbFamilyPlanBooster')
+String isChecked = Mobile.getAttribute(cekCbNoWa, 'checked',1)
+if(isChecked.equals('false')) {
+Mobile.tap(findTestObject('Object Repository/Syariah/cbFamilyPlanBooster'), 0)
+Mobile.delay(1.5)
+}
+else {
+println('gak perlu diklik cb nya, karena udh ke cek sebelumnya')
+}
+}
+else {
+//clean cb
+TestObject cekCbFamilyPlanBooster = findTestObject('Object Repository/Syariah/cbFamilyPlanBooster')
+String isCheckedFamilyPlanBooster = Mobile.getAttribute(cekCbFamilyPlanBooster, 'checked',1)
+if(isCheckedFamilyPlanBooster.equals('true')) {
+Mobile.tap(findTestObject('Object Repository/Syariah/cbFamilyPlanBooster'), 0)
+Mobile.delay(1.5)
+}
+}
+}
+
+//pilih Tertanggung
+if(strPilihanTTG !='') {
+//Tertanggung Orang Lain
+if(strPilihanTTG == 'Orang Lain') {
+
+String TglLahirTTG					= splitTglLahirTTG[0].trim()
+String BlnLahirTTG					= splitTglLahirTTG[1].trim()
+String ThnLahirTTG					= splitTglLahirTTG[2].trim()
+
+Mobile.tap(findTestObject('Object Repository/ProteksiJiwaKPRN/rbOrangLain_TTG'), 0)
+
+Mobile.delay(3)
+Mobile.swipe(1000,900,1000,500)
+println("sudah tap orang lain")
+
+//-----------------TERTANGGUNG-----------------------------
+
+//isi nama tertanggung
+Mobile.delay(2)
+if(strNamaTTG !='') {
+Mobile.setText(findTestObject('Object Repository/objProposal_Shariah/txtNamaTTG'), strNamaTTG, 0)
+}else {
+GlobalVariable.strGlbKeterangan = 'Field Nama Tertanggung kosong'
+}
+
+if(strHubunganTTG !='') {
+if(strHubunganTTG == 'Suami/Istri') {
+Mobile.tap(findTestObject('Object Repository/objProposal_Shariah/rbSuamiIstriTTG'), 1)
+}
+if(strHubunganTTG == 'Orang tua/Anak') {
+Mobile.tap(findTestObject('Object Repository/objProposal_Shariah/rbOrangTuaAnakTTG'), 1)
+}
+if(strHubunganTTG == 'Pekerja') {
+Mobile.tap(findTestObject('Object Repository/objProposal_Shariah/rbPekerja_baru'), 1)
+}
+if(strHubunganTTG == 'Perusahaan/Karyawan') {
+Mobile.tap(findTestObject('Object Repository/objProposal_Shariah/rbPerusahaanKaryawanTTG'), 1)
+}
+if(strHubunganTTG == 'Lainnya') {
+Mobile.tap(findTestObject('Object Repository/objProposal_Shariah/rbLainnyaTTG'), 1)
+}
+}
+
+//isi tanggal lahir tertanggung
+Mobile.tap(findTestObject('Object Repository/objProposal_Shariah/txtTanggalLahirTTG'),0)
+
+//isi tahun lahir
+Mobile.tap(findTestObject('Object Repository/objProposal_Shariah/txtTahunTTG'), 0)
+Mobile.setText(findTestObject('Object Repository/objProposal_Shariah/txtTahunTTG'), ThnLahirTTG, 0)
+Mobile.delay(2)
+//isi bulan lahir
+Mobile.tap(findTestObject('Object Repository/objProposal_Shariah/txtBulanTTG'), 0)
+Mobile.setText(findTestObject('Object Repository/objProposal_Shariah/txtBulanTTG'), BlnLahirTTG, 0)
+Mobile.delay(2)
+//isi tanggal lahir
+Mobile.tap(findTestObject('Object Repository/objProposal_Shariah/txtTanggalTTG'), 0)
+Mobile.setText(findTestObject('Object Repository/objProposal_Shariah/txtTanggalTTG'), TglLahirTTG, 0)
+Mobile.delay(2)
+
+
+//ok set tanggal lahir TTG
+Mobile.tap(findTestObject('Object Repository/objProposal_Shariah/btnOKTanggalLahirTTG'), 0)
+Mobile.delay(1)
+Mobile.hideKeyboard(FailureHandling.OPTIONAL)
+Mobile.swipe(1000,900,1000,500)
+Mobile.swipe(1000,900,1000,500)
+Mobile.delay(1)
+
+//isi tanggal lahir tertanggung
+Mobile.tap(findTestObject('Object Repository/objProposal_Shariah/txtTanggalLahirTTG'),0)
+
+//isi tanggal lahir
+Mobile.tap(findTestObject('Object Repository/objProposal_Shariah/txtTanggalTTG'), 0)
+Mobile.setText(findTestObject('Object Repository/objProposal_Shariah/txtTanggalTTG'), TglLahirTTG, 0)
+Mobile.delay(2)
+
+Mobile.hideKeyboard(FailureHandling.OPTIONAL)
+Mobile.swipe(1000,900,1000,500)
+Mobile.swipe(1000,900,1000,500)
+Mobile.delay(1)
+
+//isi jenis kelamin tertanggung
+if(strJKTTG !='') {
+if(strJKTTG == 'Pria') {
+Mobile.tap(findTestObject('Object Repository/objProposal_Shariah/rbJKTTGPria'), 0)
+}else {
+Mobile.tap(findTestObject('Object Repository/objProposal_Shariah/rbJKTTGWanita'), 0)
+}
+}else {
+GlobalVariable.strGlbKeterangan = 'Field Jenis Kelamin Tertanggung Kosong'
+}
+
+//isi detail pekerjaan tertanggung
+if(strJobTTG !='') {
+Mobile.tap(findTestObject('Object Repository/objProposal_Shariah/ddDetailPekerjaanTTG'), 0, FailureHandling.OPTIONAL)
+Mobile.setText(findTestObject('Object Repository/objProposal_Shariah/setTextDetailPekerjaanTTG'), strJobTTG, 0, FailureHandling.OPTIONAL)
+TestObject descDetailPekerjaanTTG = new TestObject('newObjectDetailPekerjaanTTG')
+descDetailPekerjaanTTG.addProperty('text', ConditionType.CONTAINS, strJobTTG )
+descDetailPekerjaanTTG.addProperty('resource-id', ConditionType.EQUALS, 'android:id/text1')
+Boolean cekDetailPekerjaanTTG = Mobile.verifyElementExist(descDetailPekerjaanTTG, 1, FailureHandling.OPTIONAL)
+if(cekDetailPekerjaanTTG == true){
+Mobile.tap(descDetailPekerjaanTTG, 0)
+}
+}else {
+GlobalVariable.strGlbKeterangan = 'Field Detail Pekerjaan Tertanggung Kosong'
+}
+}
+if(strPilihanTTG == 'Diri Sendiri') {
+Mobile.tap(findTestObject('Object Repository/Syariah/proposal/rbDiriSendiri_new'), 0)
+}
+}
+
+//validasi usia TTG
+Boolean cekUsiaMinTTG = Mobile.verifyElementExist(findTestObject('Object Repository/objProposal_Shariah/txtValidasiUsiaMinTTG_cek'), 1, FailureHandling.OPTIONAL)
+if (GlobalVariable.strGlbMenu == 'PROPOSAL') {
+if (cekUsiaMinTTG == true) {
+def message_usiaMinTTG = Mobile.getText(findTestObject('Object Repository/objProposal_Shariah/txtValidasiUsiaMinTTG_cek'),0)
+GlobalVariable.strGlbStatus = 'FAILED'
+GlobalVariable.strGlbKeterangan = message_usiaMinTTG
+KeywordPS.callStatus(strNo, 'PROPOSAL', 53)
+} else {
+GlobalVariable.strGlbStatus = 'PASSED'
+}
+}
+
+//tap button lanjutkan
+Mobile.tap(findTestObject('Object Repository/objProposal_Shariah/btnLanjutkanIdentitas'),  0, FailureHandling.OPTIONAL)
+
+// Validasi resiko pekerjaan
+if (GlobalVariable.strGlbMenu == 'PROPOSAL') {
+Boolean cekPekerjaan = Mobile.verifyElementExist(findTestObject('Object Repository/objProposal_Shariah/txtValidasiPekerjaan'), 1, FailureHandling.OPTIONAL)
+if (cekPekerjaan == true) {
+def message_pekerjaan = Mobile.getText(findTestObject('Object Repository/objProposal_Shariah/txtValidasiPekerjaan'),0)
+GlobalVariable.strGlbStatus = 'FAILED'
+GlobalVariable.strGlbKeterangan = message_pekerjaan
+println(message_pekerjaan)
+KeywordPS.callStatus(strNo, 'PROPOSAL', 53)
+} else {
+GlobalVariable.strGlbStatus = 'PASSED'
+}
+}
+
+
+boolean cekBtnRiderYa = Mobile.verifyElementExist(findTestObject('Object Repository/Syariah/btnRiderYa'), 1, FailureHandling.OPTIONAL)
+if (cekBtnRiderYa == true) {
+//pilih rider
+if (strRider == 'Ya') {
+Mobile.tap(findTestObject('Object Repository/Syariah/btnRiderYa'),0)
+Mobile.delay(1.5)
+
+// clean cb
+// Mandiri Critical Care clean cb
+TestObject cekCbCriticalCareClean = findTestObject('Object Repository/Syariah/btnMandiriCriticalCare')
+String isCheckedCriticalCareClean = Mobile.getAttribute(cekCbCriticalCareClean, 'checked',1)
+if(isCheckedCriticalCareClean.equals('true')) {
+Mobile.tap(findTestObject('Object Repository/Syariah/btnMandiriCriticalCare'), 0)
+Mobile.delay(0.5)
+}
+
+// Mandiri Medical Care clean cb
+TestObject cekCbMedicalCareClean = findTestObject('Object Repository/Syariah/btnMandiriMedicalCare')
+String isCheckedMedicalCareClean = Mobile.getAttribute(cekCbMedicalCareClean, 'checked',1)
+if(isCheckedMedicalCareClean.equals('true')) {
+Mobile.tap(findTestObject('Object Repository/Syariah/btnMandiriMedicalCare'),0)
+Mobile.delay(0.5)
+}
+
+// Perlindungan dana pendidikan clean cb
+TestObject cekCbDanaPendidikanClean = findTestObject('Object Repository/Syariah/btnPerlindunganDanaPendidikan')
+String isCheckedDanaPendidikanClean = Mobile.getAttribute(cekCbDanaPendidikanClean, 'checked',1)
+if(isCheckedDanaPendidikanClean.equals('true')) {
+Mobile.tap(findTestObject('Object Repository/Syariah/btnPerlindunganDanaPendidikan'), 0)
+Mobile.delay(0.5)
+}
+
+// Perlindungan Kontribusi Plus clean cb
+TestObject cekCbKontribusiPlusCLean = findTestObject('Object Repository/Syariah/proposal/btnPembayaranKontribusiPlus')
+String isCheckedKontribusiPlusClean = Mobile.getAttribute(cekCbKontribusiPlusCLean, 'checked',1)
+if(isCheckedKontribusiPlusClean.equals('true')) {
+Mobile.tap(findTestObject('Object Repository/Syariah/proposal/btnPembayaranKontribusiPlus'),0)
+Mobile.delay(0.5)
+}
+
+// Perlindungan Kontribusi Plus PP clean cb
+TestObject cekCbKontribusiPlusPPClean = findTestObject('Object Repository/Syariah/proposal/btnPembayaranKontribusiPlusPP')
+String isCheckedKontribusiPlusPPClean = Mobile.getAttribute(cekCbKontribusiPlusPPClean, 'checked',1)
+if(isCheckedKontribusiPlusPPClean.equals('true')) {
+Mobile.tap(findTestObject('Object Repository/Syariah/proposal/btnPembayaranKontribusiPlusPP'),0)
+Mobile.delay(0.5)
+}
+
+
+// Mandiri Critical Care
+if (strMandiriCriticalCare != '') {
+
+TestObject cekCbCriticalCare = findTestObject('Object Repository/Syariah/btnMandiriCriticalCare')
+String isCheckedCriticalCare = Mobile.getAttribute(cekCbCriticalCare, 'checked',1)
+
+if(isCheckedCriticalCare.equals('false')) {
+Mobile.tap(findTestObject('Object Repository/Syariah/btnMandiriCriticalCare'), 0)
+Mobile.delay(0.5)
+
+if(strMandiriCriticalCare != '') {
+if (strMandiriCriticalCare == 'Plan Gold') {
+Mobile.tap(findTestObject('Object Repository/Syariah/rbPlanGold'), 0)
+Mobile.delay(0.5)
+
+//btnlanjutkan
+Mobile.tap(findTestObject('Object Repository/Syariah/btnLanjutkanPlanRider'), 0)
+Mobile.delay(0.5)
+
+//additional rider 1
+if (strAdditionalRider1 != '') {
+if (strAdditionalRider1 == 'PLAN POWER RESET FOR EARLY CANCER') {
+Mobile.tap(findTestObject('Object Repository/Syariah/rbPlanAdditionalRider1'), 0)
+Mobile.delay(1)
+}
+}
+
+// additional rider 2
+if (strAdditionalRider2 != '') {
+if (strAdditionalRider2 == 'PLAN CONTINUOS CANCER') {
+Mobile.tap(findTestObject('Object Repository/Syariah/rbPlanAdditionalRider2'), 0)
+Mobile.delay(1)
+}
+}
+
+// additional rider 3
+if (strAdditionalRider3 != '') {
+if (strAdditionalRider3 == 'PLAN GENDER SPESIFIC CANCER') {
+Mobile.tap(findTestObject('Object Repository/Syariah/rbPlanAdditionalRider3'), 0)
+Mobile.delay(1)
+}
+}
+
+//btn lanjutkan additional rider
+Mobile.tap(findTestObject('Object Repository/Syariah/btnLanjutkanAdditionalRider'), 0)
+}
+}
+}
+else {
+println('gak perlu diklik cb nya, karena udh ke cek sebelumnya')
+}
+}
+
+// Mandiri Medical Care
+if (strMandiriMedicalCare != '') {
+TestObject cekCbMedicalCare = findTestObject('Object Repository/Syariah/btnMandiriMedicalCare')
+String isCheckedMedicalCare = Mobile.getAttribute(cekCbMedicalCare, 'checked',1)
+
+if(isCheckedMedicalCare.equals('false')) {
+Mobile.tap(findTestObject('Object Repository/Syariah/btnMandiriMedicalCare'),0)
+Mobile.delay(0.5)
+
+if (strMandiriMedicalCare == 'Plan A') {
+Mobile.tap(findTestObject('Object Repository/Syariah/rbMedicalCarePlanA'),0)
+Mobile.delay(0.5)
+
+Mobile.tap(findTestObject('Object Repository/Syariah/btnLanjutkanMedicalCare'),0)
+}
+
+if (strMandiriMedicalCare == 'Plan B') {
+Mobile.tap(findTestObject('Object Repository/Syariah/rbMedicalCarePlanB'),0)
+Mobile.delay(0.5)
+
+Mobile.tap(findTestObject('Object Repository/Syariah/btnLanjutkanMedicalCare'),0)
+}
+
+if (strMandiriMedicalCare == 'Plan C') {
+Mobile.tap(findTestObject('Object Repository/Syariah/rbMedicalCarePlanC'),0)
+Mobile.delay(0.5)
+
+Mobile.tap(findTestObject('Object Repository/Syariah/btnLanjutkanMedicalCare'),0)
+}
+
+if (strMandiriMedicalCare == 'Plan D') {
+Mobile.tap(findTestObject('Object Repository/Syariah/rbMedicalCarePlanD'),0)
+Mobile.delay(0.5)
+
+Mobile.tap(findTestObject('Object Repository/Syariah/btnLanjutkanMedicalCare'),0)
+}
+}
+else {
+println('gak perlu diklik cb nya, karena udh ke cek sebelumnya')
+}
+}
+
+// Perlindungan Dana Pendidikan
+if (strPerlindunganDanaPendidikan != '') {
+
+TestObject cekCbDanaPendidikan = findTestObject('Object Repository/Syariah/btnPerlindunganDanaPendidikan')
+String isCheckedDanaPendidikan = Mobile.getAttribute(cekCbDanaPendidikan, 'checked',1)
+
+if(isCheckedDanaPendidikan.equals('false')) {
+Mobile.tap(findTestObject('Object Repository/Syariah/btnPerlindunganDanaPendidikan'), 0)
+Mobile.delay(0.5)
+
+//tanggal lahir
+Mobile.tap(findTestObject('Object Repository/Syariah/tglLahirDanaPendidikan'), 0)
+Mobile.delay(0.5)
+
+String TanggalLahirDanaPendidikan		= splitPerlindunganDanaPendidikan[0].trim()
+String BulanLahirDanaPendidikan			= splitPerlindunganDanaPendidikan[1].trim()
+String TahunLahirDanaPendidikan			= splitPerlindunganDanaPendidikan[2].trim()
+
+//isi tahun lahir
+Mobile.tap(findTestObject('Object Repository/Syariah/thnLahirDanaPendidikan'), 0)
+Mobile.setText(findTestObject('Object Repository/Syariah/thnLahirDanaPendidikan'), TahunLahirDanaPendidikan, 0)
+//Mobile.hideKeyboard(FailureHandling.OPTIONAL)
+Mobile.delay(1)
+//isi bulan lahir
+Mobile.tap(findTestObject('Object Repository/Syariah/proposal/blnLahirDanaPendidikan'), 0)
+Mobile.setText(findTestObject('Object Repository/Syariah/proposal/blnLahirDanaPendidikan'), BulanLahirDanaPendidikan, 0)
+//Mobile.hideKeyboard(FailureHandling.OPTIONAL)
+Mobile.delay(1)
+//isi tanggal lahir
+Mobile.tap(findTestObject('Object Repository/Syariah/txtTanggalLahirDanaPendidikan'), 0)
+Mobile.setText(findTestObject('Object Repository/Syariah/txtTanggalLahirDanaPendidikan'), TanggalLahirDanaPendidikan, 0)
+//Mobile.hideKeyboard(FailureHandling.OPTIONAL)
+Mobile.delay(1)
+
+Mobile.tap(findTestObject('Object Repository/Syariah/btnOkDanaPendidikan'), 0)
+Mobile.delay(1)
+
+//btn lanjutkan tanggal lahir dana pendidikan
+Mobile.tap(findTestObject('Object Repository/Syariah/btnLanjutkanDanaPendidikan1'), 0)
+}
+else {
+println('gak perlu diklik cb nya, karena udh ke cek sebelumnya')
+}
+}
+
+// Perlindungan Pembayaran Kontribusi Plus
+if (strPerlindunganKontribusiPlus != '') {
+TestObject cekCbKontribusiPlus = findTestObject('Object Repository/Syariah/proposal/btnPembayaranKontribusiPlus')
+String isCheckedKontribusiPlus = Mobile.getAttribute(cekCbKontribusiPlus, 'checked',1)
+
+if(isCheckedKontribusiPlus.equals('false')) {
+Mobile.tap(findTestObject('Object Repository/Syariah/proposal/btnPembayaranKontribusiPlus'),0)
+Mobile.delay(1)
+
+if (strPerlindunganKontribusiPlus == 'PLAN SILVER') {
+Mobile.tap(findTestObject('Object Repository/Syariah/proposal/cbSilverKontribusiPlus'),0)
+Mobile.delay(1)
+}
+
+else {
+Mobile.tap(findTestObject('Object Repository/Syariah/proposal/cbGoldKontribusiPlus'),0)
+Mobile.delay(1)
+}
+
+Mobile.tap(findTestObject('Object Repository/Syariah/proposal/btnLanjutkanKontribusiPlus'),0)
+Mobile.delay(1)
+}
+else {
+println('gak perlu diklik cb nya, karena udh ke cek sebelumnya')
+}
+}
+
+// Perlindungan Pembayaran Kontribusi Plus PP
+if (strPerlindunganPembayaranPP != '') {
+TestObject cekCbKontribusiPlusPP = findTestObject('Object Repository/Syariah/proposal/btnPembayaranKontribusiPlusPP')
+String isCheckedKontribusiPlusPP = Mobile.getAttribute(cekCbKontribusiPlusPP, 'checked',1)
+
+if(isCheckedKontribusiPlusPP.equals('false')) {
+Mobile.tap(findTestObject('Object Repository/Syariah/proposal/btnPembayaranKontribusiPlusPP'),0)
+Mobile.delay(1)
+
+if (strPerlindunganPembayaranPP == 'PLAN SILVER') {
+Mobile.tap(findTestObject('Object Repository/Syariah/proposal/cbSilverKontribusiPlusPP'),0)
+Mobile.delay(1)
+}
+
+else {
+Mobile.tap(findTestObject('Object Repository/Syariah/proposal/cbGoldKontribusiPlusPP'),0)
+Mobile.delay(1)
+}
+
+Mobile.tap(findTestObject('Object Repository/Syariah/proposal/btnLanjutkanKontribusiPlusPP'),0)
+Mobile.delay(1)
+}
+else {
+println('gak perlu diklik cb nya, karena udh ke cek sebelumnya')
+}
+}
+
+// klik lanjutkan
+Mobile.tap(findTestObject('Object Repository/Syariah/btnLanjutkanRider'), 0)
+Mobile.delay(1)
+}
+else {
+Mobile.tap(findTestObject('Object Repository/Syariah/btnRiderTidak'), 0)
+Mobile.delay(1)
+}
+}
+
+
+
+
+//pilih mata uang
+if(strMataUangProposal !='') {
+println('belum tap RP')
+Mobile.tap(findTestObject('Object Repository/objProposal_Shariah/btnRupiah1'), 0)
+println('sudah tap RP')
+}else {
+GlobalVariable.strGlbKeterangan = 'Field Mata Uang kosong'
+}
+
+//pilih cara bayar
+if(strCaraBayar !='') {
+if(strCaraBayar == 'Tahunan') {
+Mobile.tap(findTestObject('Object Repository/objProposal_Shariah/rbTahunan1'),0, FailureHandling.OPTIONAL)
+}else if(strCaraBayar == 'Semesteran') {
+Mobile.tap(findTestObject('Object Repository/objProposal_Shariah/rbSemesteran1'), 0, FailureHandling.OPTIONAL)
+}else if(strCaraBayar == 'Triwulan') {
+Mobile.tap(findTestObject('Object Repository/objProposal_Shariah/rbTriwulan1'), 0, FailureHandling.OPTIONAL)
+}else if (strCaraBayar == 'Bulanan'){
+Mobile.tap(findTestObject('Object Repository/objProposal_Shariah/rbBulanan1'), 0, FailureHandling.OPTIONAL) //di aplikasi gaada bulanan, gimana cara munculinnya
+}
+}else {
+GlobalVariable.strGlbKeterangan = 'Field Cara Bayar kosong'
+}
+
+//pilih Pertanggungan
+if(strPertanggungan !='') {
+if(strPertanggungan == 'Santunan Asuransi') {
+Mobile.tap(findTestObject('Object Repository/ProteksiJiwaKPRN/btnSantunanAsuransiBaru'), 0) // tap btn santunan asuransi
+
+Mobile.tap(findTestObject('Object Repository/ProteksiJiwaKPRN/setTextPenghasilanPerbulanSantunanAsuransi'), 0)
+Mobile.setText(findTestObject('Object Repository/ProteksiJiwaKPRN/setTextPenghasilanPerbulanSantunanAsuransi'), strPenghasilan, 0) // isi penghasilan perbulan
+Mobile.hideKeyboard()
+
+Mobile.delay(1)
+
+Mobile.tap(findTestObject('Object Repository/ProteksiJiwaKPRN/setTextSantunanAsuransiDasarBaru'), 0)
+Mobile.setText(findTestObject('Object Repository/ProteksiJiwaKPRN/setTextSantunanAsuransiDasarBaru'), strSantunan, 0) // isi Santunan asuransi
+Mobile.hideKeyboard()
+Mobile.delay(1)
+
+Mobile.tap(findTestObject('Object Repository/ProteksiJiwaKPRN/setTextTotalKontribusiSantunanAsuransi'), 0)
+Mobile.setText(findTestObject('Object Repository/ProteksiJiwaKPRN/setTextTotalKontribusiSantunanAsuransi'), strKontribusi, 0) // isi total kontribusi
+Mobile.hideKeyboard()
+Mobile.delay(1)
+
+Mobile.tap(findTestObject('Object Repository/ProteksiJiwaKPRN/setTextRBPSantunanAsuransi'), 0)
+Mobile.setText(findTestObject('Object Repository/ProteksiJiwaKPRN/setTextRBPSantunanAsuransi'), strRBP, 0) // isi RBP Mix
+Mobile.hideKeyboard()
+Mobile.hideKeyboard()
+Mobile.delay(1)
+
+keyPS.KeywordPS.SwipeDownIfObjectNotOnScreen('Object Repository/ProteksiJiwaKPRN/btnLanjutkanSantunanAsuransi')
+
+Mobile.tap(findTestObject('Object Repository/ProteksiJiwaKPRN/btnLanjutkanSantunanAsuransi'), 0, FailureHandling.OPTIONAL)
+
+// cek validasi Santunan Asuransi Dasar - SA
+Boolean cekErrorSantunanAsuransiDasar_SA = Mobile.verifyElementExist(findTestObject('Object Repository/ProteksiJiwaKPRN/errorSantunanAsuransiDasar_SA'), 1, FailureHandling.OPTIONAL)
+if (GlobalVariable.strGlbMenu == 'PROPOSAL') {
+if (cekErrorSantunanAsuransiDasar_SA == true) {
+GlobalVariable.strGlbStatus = 'FAILED'
+def message_SantunanAsuransiDasar_SA = Mobile.getText(findTestObject('Object Repository/ProteksiJiwaKPRN/errorSantunanAsuransiDasar_SA'),0)
+GlobalVariable.strGlbKeterangan = message_SantunanAsuransiDasar_SA
+KeywordPS.callStatus(strNo, 'PROPOSAL', 53)
+} else {
+GlobalVariable.strGlbStatus = 'PASSED'
+}
+}
+
+// cek validasi Total Kontribusi - SA
+Boolean cekErrorTotalKontribusi_SA = Mobile.verifyElementExist(findTestObject('Object Repository/ProteksiJiwaKPRN/errorTotalKontribusi_SA'), 1, FailureHandling.OPTIONAL)
+if (GlobalVariable.strGlbMenu == 'PROPOSAL') {
+if (cekErrorTotalKontribusi_SA == true) {
+GlobalVariable.strGlbStatus = 'FAILED'
+def message_TotalKontribusi_SA = Mobile.getText(findTestObject('Object Repository/ProteksiJiwaKPRN/errorTotalKontribusi_SA'),0)
+GlobalVariable.strGlbKeterangan = message_TotalKontribusi_SA
+KeywordPS.callStatus(strNo, 'PROPOSAL', 53)
+} else {
+GlobalVariable.strGlbStatus = 'PASSED'
+}
+}
+
+// cek validasi RBP - SA
+Boolean cekErrorRBP_SA = Mobile.verifyElementExist(findTestObject('Object Repository/ProteksiJiwaKPRN/errorRBP_SantunanAsuransi'), 1, FailureHandling.OPTIONAL)
+if (GlobalVariable.strGlbMenu == 'PROPOSAL') {
+if (cekErrorRBP_SA == true) {
+GlobalVariable.strGlbStatus = 'FAILED'
+def message_RBP_SA = Mobile.getText(findTestObject('Object Repository/ProteksiJiwaKPRN/errorRBP_SantunanAsuransi'),0)
+GlobalVariable.strGlbKeterangan = message_RBP_SA
+KeywordPS.callStatus(strNo, 'PROPOSAL', 53)
+}
+}
+
+}else {
+Mobile.tap(findTestObject('Object Repository/ProteksiJiwaKPRN/btnKontribusiBaru'), 0) // tap btn kontribusi
+
+Mobile.delay(1)
+Mobile.tap(findTestObject('Object Repository/ProteksiJiwaKPRN/setTextPenghasilanPerbulanKontribusi'), 0)
+Mobile.setText(findTestObject('Object Repository/ProteksiJiwaKPRN/setTextPenghasilanPerbulanKontribusi'), strPenghasilan, 0) // isi penghasilan perbulan
+Mobile.hideKeyboard()
+Mobile.delay(1)
+
+Mobile.setText(findTestObject('Object Repository/ProteksiJiwaKPRN/setTextRBP'), strRBP, 0) // isi RBP Mix
+Mobile.hideKeyboard()
+Mobile.hideKeyboard()
+Mobile.delay(1)
+
+Mobile.tap(findTestObject('Object Repository/ProteksiJiwaKPRN/setTextTotalKontribusi'), 0)
+Mobile.delay(1)
+Mobile.tap(findTestObject('Object Repository/ProteksiJiwaKPRN/setTextTotalKontribusi'), 0)
+Mobile.setText(findTestObject('Object Repository/ProteksiJiwaKPRN/setTextTotalKontribusi'), strKontribusi, 0)
+Mobile.delay(1)
+Mobile.hideKeyboard()
+Mobile.delay(1)
+
+Mobile.setText(findTestObject('Object Repository/ProteksiJiwaKPRN/setTextSantunanAsuransi'), strSantunan, 0) // isi Santunan asuransi
+Mobile.hideKeyboard()
+Mobile.delay(2)
+Mobile.hideKeyboard()
+
+Mobile.swipe(954, 802, 954, 705)
+Mobile.swipe(954, 802, 954, 705)
+Mobile.hideKeyboard()
+
+// santunan tambahan
+if (strSantunanAsuransiTambahanMCC != '') {
+Mobile.setText(findTestObject('Object Repository/Syariah/setTextAsuransiTambahanMCC'), strSantunanAsuransiTambahanMCC, 0)
+Mobile.delay(1.5)
+}
+
+keyPS.KeywordPS.SwipeDownIfObjectNotOnScreen('Object Repository/ProteksiJiwaKPRN/btnLanjutkanKontribusi')
+
+Mobile.tap(findTestObject('Object Repository/ProteksiJiwaKPRN/btnLanjutkanKontribusi'), 0, FailureHandling.OPTIONAL)
+
+// cek RBP - Kontribusi
+Boolean cekRBPKontribusi = Mobile.verifyElementExist(findTestObject('Object Repository/ProteksiJiwaKPRN/errorRBP_Kontribusi'), 1, FailureHandling.OPTIONAL)
+if (GlobalVariable.strGlbMenu == 'PROPOSAL') {
+if (cekRBPKontribusi == true) {
+GlobalVariable.strGlbStatus = 'FAILED'
+def message_RBPKontribusi = Mobile.getText(findTestObject('Object Repository/ProteksiJiwaKPRN/errorRBP_Kontribusi'),0)
+GlobalVariable.strGlbKeterangan = message_RBPKontribusi
+println(message_RBPKontribusi)
+KeywordPS.callStatus(strNo, 'PROPOSAL', 53)
+}
+}
+
+// cek Total kontribusi - Kontribusi
+Boolean cekTotalKontribusi = Mobile.verifyElementExist(findTestObject('Object Repository/ProteksiJiwaKPRN/errorTotalKontribusi_Kontribusi') , 1, FailureHandling.OPTIONAL)
+if (GlobalVariable.strGlbMenu == 'PROPOSAL') {
+if (cekTotalKontribusi == true) {
+GlobalVariable.strGlbStatus = 'FAILED'
+def message_Kontribusi = Mobile.getText(findTestObject('Object Repository/ProteksiJiwaKPRN/errorTotalKontribusi_Kontribusi'),0)
+GlobalVariable.strGlbKeterangan = message_Kontribusi
+println(message_Kontribusi)
+KeywordPS.callStatus(strNo, 'PROPOSAL', 53)
+} else {
+GlobalVariable.strGlbStatus = 'PASSED'
+}
+}
+
+// cek Santunan Asuransi - Kontribusi
+Boolean cekSantunanAsuransi = Mobile.verifyElementExist(findTestObject('Object Repository/ProteksiJiwaKPRN/errorSantunanAsuransi_Kontribusi'), 1, FailureHandling.OPTIONAL)
+if (GlobalVariable.strGlbMenu == 'PROPOSAL') {
+if (cekSantunanAsuransi == true) {
+GlobalVariable.strGlbStatus = 'FAILED'
+def message_SantunanAsuransiKontribusi = Mobile.getText(findTestObject('Object Repository/ProteksiJiwaKPRN/errorSantunanAsuransi_Kontribusi'),0)
+GlobalVariable.strGlbKeterangan = message_SantunanAsuransiKontribusi
+KeywordPS.callStatus(strNo, 'PROPOSAL', 53)
+} else {
+GlobalVariable.strGlbStatus = 'PASSED'
+}
+}
+}
+}else {
+GlobalVariable.strGlbKeterangan = 'Field Pertanggungan kosong'
+}
+
+
+//pilih fund
+
+Mobile.tap(findTestObject('Object Repository/ProteksiJiwaKPRN/btnFund'), 0)
+Mobile.delay(1)
+
+// Mandiri Attractive Equity Money Syariah Rupiah
+if (strAttractive == 'Ya') {
+Mobile.tap(findTestObject('Object Repository/objFund_Syariah/fundAttractive'),0)
+fundSyariah.fund_syariah(strAlokasiAttractive)
+Mobile.delay(2)
+}
+
+// Mandiri Amanah Equity Syariah Rupiah
+if (strEquity == 'Ya') {
+Mobile.tap(findTestObject('Object Repository/objFund_Syariah/fundEquity'),0)
+fundSyariah.fund_syariah(strAlokasiEquity)
+Mobile.delay(2)
+}
+
+// Mandiri Active Balanced Money Syariah Rupiah
+if (strActive == 'Ya') {
+keyPS.KeywordPS.SwipeDownIfObjectNotOnScreen_fund('Object Repository/objFund_Syariah/fundActive')
+Mobile.tap(findTestObject('Object Repository/objFund_Syariah/fundActive'),0)
+fundSyariah.fund_syariah(strAlokasiActive)
+Mobile.delay(2)
+}
+
+// Mandiri Amanah Pendapatan Tetap Syariah Rupiah
+if (strPendapatan == 'Ya') {
+keyPS.KeywordPS.SwipeDownIfObjectNotOnScreen_fund('Object Repository/objFund_Syariah/fundPendapatan')
+Mobile.tap(findTestObject('Object Repository/objFund_Syariah/fundPendapatan'),0)
+fundSyariah.fund_syariah(strAlokasiPendapatan)
+Mobile.delay(2)
+}
+
+// Mandiri Amanah Pasar Uang Syariah Rupiah
+if (strPasarUang == 'Ya') {
+keyPS.KeywordPS.SwipeDownIfObjectNotOnScreen_fund('Object Repository/objFund_Syariah/fundPasarUang')
+Mobile.tap(findTestObject('Object Repository/objFund_Syariah/fundPasarUang'),0)
+fundSyariah.fund_syariah(strAlokasiPasarUang)
+Mobile.delay(2)
+}
+
+println('selesai delay fund')
+Mobile.delay(2)
+
+TestObject cekCbFund = findTestObject('Object Repository/objFund_Syariah/cbFund')
+String isChecked = Mobile.getAttribute(cekCbFund, 'checked',1)
+
+if(isChecked.equals('false')) {
+Mobile.tap(findTestObject('Object Repository/objFund_Syariah/cbFund'), 0)
+}
+else {
+println('gak perlu diklik cb nya, karena udh ke cek sebelumnya')
+}
+Mobile.tap(findTestObject("Object Repository/objFund_Syariah/btnLanjutkanFund"),0)
+Mobile.delay(1)
+
+
+// LUMPSUM
+if (strLumpsum != '') {
+if (strLumpsum == 'Ya') {
+TestData dataLumpsum				= findTestData('dataPS/LUMP SUM')
+
+String strTAHUNSUM					= dataLumpsum.getValue('TAHUN', excelRow)
+String strJUMLAHSUM					= dataLumpsum.getValue('JUMLAH', excelRow)
+
+//
+Mobile.tap(findTestObject('Object Repository/ProteksiJiwaKPRN/btnLumpSum'),0)
+Mobile.delay(1)
+
+Mobile.setText(findTestObject('Object Repository/ProteksiJiwaKPRN/setTextJumlahLumpSum'), strJUMLAHSUM, 0)
+Mobile.hideKeyboard()
+Mobile.delay(1)
+
+//pilih data tahun
+Mobile.tap(findTestObject('Object Repository/ProteksiJiwaKPRN/setTextTahunLumpSum'), 0)
+TestObject descTahunSum = new TestObject('newObjectDescTahunSum')
+descTahunSum.addProperty('text', ConditionType.EQUALS, strTAHUNSUM)
+Boolean cekTahunSum = Mobile.verifyElementExist(descTahunSum, 1, FailureHandling.OPTIONAL)
+println (cekTahunSum)
+
+if (cekTahunSum == true) {
+Mobile.tap(descTahunSum, 1)
+}
+
+while (cekTahunSum == false) {
+Mobile.swipe(600, 895, 612, 528)
+
+cekTahunSum = Mobile.verifyElementExist(descTahunSum, 1, FailureHandling.OPTIONAL)
+
+if (cekTahunSum == true) {
+Mobile.tap(descTahunSum, 1)
+Thread.sleep(1000)
+}
+}
+
+Mobile.tap(findTestObject('Object Repository/ProteksiJiwaKPRN/btnAddLumpSum'),0)
+println('berhasil add LumpSum')
+
+Mobile.tap(findTestObject('Object Repository/Syariah/btnLanjutkanLumpsum'),0)
+Mobile.delay(1)
+
+}
+}
+
+
+// WITHDRAWAL
+if (strWithdrawal != '') {
+if (strWithdrawal == 'Ya') {
+TestData dataWithdrawal				= findTestData('dataPS/WITHDRAWAL')
+
+String strTAHUNWD					= dataWithdrawal.getValue('TAHUN', excelRow)
+String strJUMLAHWD					= dataWithdrawal.getValue('JUMLAH', excelRow)
+
+
+Mobile.tap(findTestObject('Object Repository/ProteksiJiwaKPRN/btnWithdrawal'),0)
+Mobile.delay(1)
+
+Mobile.setText(findTestObject('Object Repository/ProteksiJiwaKPRN/setTextJumlahWithdrawal'), strJUMLAHWD, 0)
+Mobile.hideKeyboard()
+Mobile.delay(1)
+
+//pilih data tahun
+Mobile.tap(findTestObject('Object Repository/ProteksiJiwaKPRN/setTextTahunWithdrawal'), 0)
+TestObject descTahunWithdrawal = new TestObject('newObjectDescTahunWithdrawal')
+descTahunWithdrawal.addProperty('text', ConditionType.EQUALS, strTAHUNWD)
+Boolean cekTahunWithdrawal = Mobile.verifyElementExist(descTahunWithdrawal, 1, FailureHandling.OPTIONAL)
+println (cekTahunWithdrawal)
+
+if (cekTahunWithdrawal == true) {
+Mobile.tap(descTahunWithdrawal, 1)
+}
+
+while (cekTahunWithdrawal == false) {
+Mobile.swipe(600, 895, 612, 528)
+
+cekTahunWithdrawal = Mobile.verifyElementExist(descTahunWithdrawal, 1, FailureHandling.OPTIONAL)
+
+if (cekTahunWithdrawal == true) {
+Mobile.tap(descTahunWithdrawal, 1)
+Thread.sleep(1000)
+}
+}
+
+Mobile.tap(findTestObject('Object Repository/ProteksiJiwaKPRN/btnAddWithdrawal'),0)
+println('berhasil add Withdrawal')
+
+Mobile.tap(findTestObject('Object Repository/Syariah/btnLanjutkanWithdrawal'),0)
+Mobile.delay(1)
+
+}
+}
+
+Mobile.tap(findTestObject('Object Repository/ProteksiJiwaKPRN/btnLanjutkanProposalMEPS'),0) //btn lanjutkan proposal
+
+Mobile.delay(1)
+//get buat pembayaran yg lebih cepat
+String strNominalPembayaran = Mobile.getText(findTestObject('Object Repository/Syariah/proposal/tvJumlahPremiPertama'), 0)
+println(strNominalPembayaran)
+GlobalVariable.strNominalPembayaran = strNominalPembayaran.substring(strNominalPembayaran.indexOf("Rp. ")+4, strNominalPembayaran.length()).trim()
+
+Mobile.delay(1)
+Mobile.tap(findTestObject('Object Repository/ProteksiJiwaKPRN/btnRiplayPersonalMEPS'),0) //btn riplay personal
+Mobile.delay(5)
+
+Boolean cekLoadingProposal = Mobile.verifyElementExist(findTestObject('Object Repository/Syariah/proposal/cekLoadingMessageProposal'), 0)
+if(cekLoadingProposal == true) {
+Boolean cekLoadingFinish = false
+while(cekLoadingFinish == false) {
+cekLoadingFinish = Mobile.waitForElementNotPresent(findTestObject('Object Repository/Syariah/proposal/cekLoadingMessageProposal'), 1, FailureHandling.OPTIONAL)
+}
+}
+Mobile.delay(1)
+Mobile.tap(findTestObject('Object Repository/Syariah/proposal/btnPernyataanPaydi'),0)
+Mobile.delay(4)
+
+}
+}
+UNGGAH/pilihIDCard-Galeri'), 2)
+Mobile.tap(findTestObject('Object Repository/SHARIA/DOKUMEN/UNGGAH/tapGambar'), 2)
+
+//tap lanjutkan
+Mobile.tap(findTestObject('Object Repository/SHARIA/DOKUMEN/UNGGAH/btnLanjutkan'),  2)
+}
+//unggah foto pemegang polis & ID
+def cekSelfie = Mobile.verifyElementNotExist(findTestObject('Object Repository/SHARIA/DOKUMEN/UNGGAH/areaUnggah-SelfieID'), 2, FailureHandling.OPTIONAL)
+if(cekSelfie == false) {
+Mobile.tap(findTestObject('Object Repository/SHARIA/DOKUMEN/UNGGAH/areaUnggah-SelfieID'), 2)
+
+Mobile.tap(findTestObject('Object Repository/SHARIA/DOKUMEN/UNGGAH/pilihSelfie-Kamera'), 2)
+Mobile.tap(findTestObject('Object Repository/SHARIA/DOKUMEN/UNGGAH/PopUp-OkSelfie'), 2)
+Mobile.delay(3)
+Mobile.tap(findTestObject('Object Repository/SHARIA/DOKUMEN/UNGGAH/takeSelfie'), 2)
+Mobile.tap(findTestObject('Object Repository/SHARIA/DOKUMEN/UNGGAH/doneSelfie'), 2)
+}
+Mobile.tap(findTestObject('Object Repository/SHARIA/DOKUMEN/UNGGAH/btnLanjutkan'), 2)
+//--------------------------------------LIHAT DOKUMEN---------------------------------------------
+//cek FNA
+Mobile.tap(findTestObject('Object Repository/SHARIA/DOKUMEN/CEK/areaCek-FNA'), 2)
+
+Mobile.waitForElementPresent(findTestObject('Object Repository/SHARIA/DOKUMEN/CEK/btnBack-FNA PROPOSAL'), 5)
+Mobile.tap(findTestObject('Object Repository/SHARIA/DOKUMEN/CEK/btnBack-FNA PROPOSAL'), 2)
+Mobile.delay(2)
+Mobile.tap(findTestObject('Object Repository/SHARIA/DOKUMEN/CEK/btnYA-FNA SPAJ FA'), 2)
+//cek Proposal
+Mobile.tap(findTestObject('Object Repository/SHARIA/DOKUMEN/CEK/areaCek-Proposal'), 2)
+Mobile.waitForElementPresent(findTestObject('Object Repository/SHARIA/DOKUMEN/CEK/btnBack-FNA PROPOSAL'), 5)
+Mobile.tap(findTestObject('Object Repository/SHARIA/DOKUMEN/CEK/btnBack-FNA PROPOSAL'), 2)
+Mobile.delay(2)
+Mobile.tap(findTestObject('Object Repository/SHARIA/DOKUMEN/CEK/btnYA-Proposal'), 2)
+
+//cek SPAJ
+Mobile.tap(findTestObject('Object Repository/SHARIA/DOKUMEN/CEK/areaCek-SPAJ'), 2)
+Mobile.waitForElementPresent(findTestObject('Object Repository/SHARIA/DOKUMEN/CEK/btnBack-ESPAJ FA'), 5)
+Mobile.tap(findTestObject('Object Repository/SHARIA/DOKUMEN/CEK/btnBack-ESPAJ FA'), 2)
+Mobile.delay(2)
+Mobile.tap(findTestObject('Object Repository/SHARIA/DOKUMEN/CEK/btnYA-FNA SPAJ FA'), 2)
+//cek e-KPRN
+def cekKPRN = Mobile.verifyElementExist(findTestObject('Object Repository/SHARIA/DOKUMEN/CEK/areaCek-KPRN'), 2, FailureHandling.OPTIONAL)
+if(cekKPRN == true) {
+Mobile.tap(findTestObject('Object Repository/SHARIA/DOKUMEN/CEK/areaCek-KPRN'), 2)
+
+Mobile.waitForElementPresent(findTestObject('Object Repository/SHARIA/DOKUMEN/CEK/btnBack-KPRN'), 5)
+Mobile.tap(findTestObject('Object Repository/SHARIA/DOKUMEN/CEK/btnBack-KPRN'), 2)
+Mobile.delay(2)
+Mobile.tap(findTestObject('Object Repository/SHARIA/DOKUMEN/CEK/btnYA-KPRN'), 2)
+}
+//cek Keterangan FA
+Mobile.tap(findTestObject('Object Repository/SHARIA/DOKUMEN/CEK/areaCek-KeteranganFA'), 2)
+Mobile.waitForElementPresent(findTestObject('Object Repository/SHARIA/DOKUMEN/CEK/btnBack-ESPAJ FA'), 5)
+Mobile.tap(findTestObject('Object Repository/SHARIA/DOKUMEN/CEK/btnBack-ESPAJ FA'), 2)
+Mobile.delay(2)
+Mobile.tap(findTestObject('Object Repository/SHARIA/DOKUMEN/CEK/btnYA-FNA SPAJ FA'), 2)
+//tap lanjutkan ke tanda tangan
+Mobile.tap(findTestObject('Object Repository/SHARIA/DOKUMEN/CEK/btnLanjutkan'), 2)
+
+
